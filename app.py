@@ -53,13 +53,27 @@ class Grubhub:
             soup = BeautifulSoup(source)
 
             mydivs = soup.findAll('', {"class": ["menuSection-title", 'menuItem-name']})
-            print(mydivs)
+
             # must close the driver after task finished
             driver.close()
         return mydivs
+      
+    def getItems(self):
+      itemsArray = self.scraper()
+      items = {}
+      section = ""
+      for x in itemsArray:
+        if "menuSection-title" in x.get('class'):
+          section = x.text
+          items[section] = []
+        else:
+          items[section].append(x.text)
+      
+      print(items)
+      return itemsArray
 
 
 url = 'https://www.grubhub.com/restaurant/wendys-2543-rainier-ave-s-seattle/1681402'
 
 grubhubTest = Grubhub(url, webdriver)
-grubhubTest.scraper()
+grubhubTest.getItems()
